@@ -3,6 +3,9 @@ const cors = require('cors');
 const app = express()
 const port = 4000
 
+//rend accessible à l'extérieur le contenu du dossier public
+app.use(express.static('public')) 
+
 // Traite des requete dons le "content-type" est "application/x-www-form-urlencoded"
 app.use(express.urlencoded({ extended: true }))
 
