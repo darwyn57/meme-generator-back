@@ -8,16 +8,16 @@ const upload = uploadConfig.any()
 exports.create = (requete, resultat) => {
   upload(requete, resultat, (erreur) => {
     try {
-      // if (erreur instanceof multer.MulterError) {
-      //   resultat.status(400).send({ message: 'image trop lourde' })
-      //   return
-      // } else if (!requete.files[0]) {
-      //   resultat.status(400).send({ message: "l'image est obligatoire" })
-      //   return
-      // }
+      if (erreur instanceof multer.MulterError) {
+        resultat.status(400).send({ message: 'image trop lourde' })
+        return
+      } else if (!requete.files[0]) {
+        resultat.status(400).send({ message: "l'image est obligatoire" })
+        return
+      }
 
-      // const json = JSON.parse(requete.body.utilisateur)
-      const json = requete.body
+      const json = JSON.parse(requete.body.utilisateur)
+      
       const bcrypt = require('bcrypt')
 
       const salt = bcrypt.genSaltSync(10)
@@ -26,12 +26,14 @@ exports.create = (requete, resultat) => {
       const utilisateur = new Utilisateur({
         email: json.email,
         password: hash,
-        // avatar_url: requete.files[0].filename,
+        avatar_url: requete.files[0].filename,
       })
 
       utilisateur
         .save()
-        .then((donnees) => resultat.status(201).send(donnees))
+        .then((donnees) => {
+          donnees.password = undefined
+          resultat.status(201).send(donnees)})
         .catch((erreur) =>
           resultat.status(500).send({ message: erreur.message }),
         )
