@@ -18,6 +18,7 @@ app.use(cors());
 app.get('/', (requete,resultat)=> resultat.send('le serveur mache!'))
 // Appel des routes
 require('./routes/meme.routes.js')(app)
+require('./routes/utilisateur.routes.js')(app)
 // Lancement du serveur
 app.listen(port, () => {
     console.log(`Le serveur est accessible sur le port : ${port}`)
