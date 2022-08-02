@@ -100,7 +100,7 @@ exports.connexion = async (requete, res) => {
       expiresIn: expireIn,
     },
   )
-
+  res.header('Access-Control-Expose-Headers', 'Authorization')
   res.header('Authorization', 'Bearer ' + token)
 
   return res.status(200).json('auth_ok')

@@ -6,6 +6,18 @@ const { uploadConfig } = require('../configuration.js')
 const upload = uploadConfig.any()
 
 exports.create = (requete, resultat) => {
+  const bearer =  requete.headers.authorization
+
+  if(bearer && bearer.startsWith('Bearer ')) {
+    const jwt = bearer.substring(7)
+    const jsonwebtoken = require ('jsonwebtoken')
+    if(!jsonwebtoken.verify(jwt, 'azerty123')) {
+      return resultat.status(403).send({ message: 'Accès refusé' })
+    }
+    
+  }else {return resultat.status(403).send({ message: 'format invalide' })
+}
+
   upload(requete, resultat, (erreur) => {
     if (erreur instanceof multer.MulterError) {
       resultat.status(400).send({ message: 'image trop lourde' })
