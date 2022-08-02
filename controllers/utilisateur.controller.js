@@ -70,3 +70,38 @@ exports.deleteByEmail = (requete, resultat) => {
     },
   )
 }
+
+exports.connexion = async (requete, res) => {
+
+  const { email, password } = requete.body
+  const utilisateur = await Utilisateur.findOne({ email })
+
+  if (!utilisateur) {
+    return res.status(403).send({ message: 'email / password inconnu' })
+  }
+
+  const bcrypt = require('bcrypt')
+
+  const valid = bcrypt.compareSync(password, utilisateur.password)
+
+  if (!valid) {
+    return res.status(403).send({ message: 'email / password inconnu' })
+  }
+
+  const jwt = require('jsonwebtoken')
+
+  const expireIn = 24 * 60 * 60
+  const token = jwt.sign(
+    {
+      email: email,
+    },
+    'azerty123',
+    {
+      expiresIn: expireIn,
+    },
+  )
+
+  res.header('Authorization', 'Bearer ' + token)
+
+  return res.status(200).json('auth_ok')
+}

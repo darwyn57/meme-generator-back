@@ -8,4 +8,6 @@ module.exports = (app) => {
     app.get('/utilisateur/:email', utilisateurController.findByEmail)
   
     app.delete('/utilisateur/:email', utilisateurController.deleteByEmail)
+
+    app.post('/connexion', utilisateurController.connexion)
   }
